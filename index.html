@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=VT323&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: flex-end;
+        background: transparent;
+      }
+
+      .overlay {
+        font-family: 'VT323', monospace;
+        display: flex;
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-end;
+        color: #fff;
+        text-shadow: 1px 1px 1px #000;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay">
+      <div class="overlay-datetime"></div>
+      <div class="overlay-custom"></div>
+    </div>
+    <script>
+      function parseQuery(queryString) {
+        const query = {};
+        const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+        for (let i = 0; i < pairs.length; i++) {
+          const pair = pairs[i].split('=');
+          query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+        }
+        return query;
+      }
+
+      const urlParts = location.href.split('#');
+      if (urlParts.length > 1) {
+        urlParts.shift();
+        const query = urlParts.join('#');
+
+        const overlayElement = document.querySelector('.overlay');
+        const datetimeElement = document.querySelector('.overlay-datetime');
+        const customElement = document.querySelector('.overlay-custom');
+
+        const parsedQuery = parseQuery(query);
+
+        const update = () => {
+          const datetimeText = new Date().toISOString();
+          datetimeElement.innerHTML = datetimeText.replace(/T/g, ' T').replace(/\.\d+/g, '');
+          if (parsedQuery.customText) customElement.innerHTML = parsedQuery.customText;
+          if (parsedQuery.fontSize) overlayElement.style.fontSize = parsedQuery.fontSize;
+        };
+
+        setInterval(update, 1000);
+        update();
+      }
+    </script>
+  </body>
+</html>
