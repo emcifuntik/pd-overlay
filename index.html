@@ -51,7 +51,13 @@
         const parsedQuery = parseQuery(query);
 
         const update = () => {
-          const datetimeText = new Date().toISOString();
+          let tzOffset = 0;
+          if (parsedQuery.timeOffset) {
+            tzOffset = +parsedQuery.timeOffset;
+          }
+
+          const date = new Date(Date.now() + tzOffset);
+          const datetimeText = date.toISOString();
           datetimeElement.innerHTML = datetimeText.replace(/T/g, ' T').replace(/\.\d+/g, '');
           if (parsedQuery.customText) customElement.innerHTML = parsedQuery.customText;
           if (parsedQuery.fontSize) overlayElement.style.fontSize = parsedQuery.fontSize;
