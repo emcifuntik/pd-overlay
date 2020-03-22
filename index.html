@@ -15,18 +15,35 @@
         font-family: 'VT323', monospace;
         display: flex;
         padding: 10px;
-        flex-direction: column;
-        align-items: flex-end;
+        flex-direction: row;
         color: #fff;
         text-shadow: 1px 1px 1px #000;
         text-transform: uppercase;
+      }
+
+      .overlay-column {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .overlay-logo {
+        min-height: 100%;
+        background-image: url(./axon_logo.png);
+        background-size: 100% 100%;
+        margin-left: 10px;
       }
     </style>
   </head>
   <body>
     <div class="overlay">
-      <div class="overlay-datetime"></div>
-      <div class="overlay-custom"></div>
+      <div class="overlay-column">
+        <div class="overlay-datetime"></div>
+        <div class="overlay-custom"></div>
+      </div>
+      <div class="overlay-column">
+        <div class="overlay-logo"></div>
+      </div>
     </div>
     <script>
       function parseQuery(queryString) {
@@ -46,6 +63,7 @@
 
         const overlayElement = document.querySelector('.overlay');
         const datetimeElement = document.querySelector('.overlay-datetime');
+        const logoElement = document.querySelector('.overlay-logo');
         const customElement = document.querySelector('.overlay-custom');
 
         const parsedQuery = parseQuery(query);
@@ -61,6 +79,8 @@
           datetimeElement.innerHTML = datetimeText.replace(/T/g, ' T').replace(/\.\d+/g, '');
           if (parsedQuery.customText) customElement.innerHTML = parsedQuery.customText;
           if (parsedQuery.fontSize) overlayElement.style.fontSize = parsedQuery.fontSize;
+          console.log(logoElement.clientHeight);
+          logoElement.style.minWidth = Math.round(logoElement.scrollHeight * (322/240)) + 'px';
         };
 
         setInterval(update, 1000);
